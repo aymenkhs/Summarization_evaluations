@@ -1,9 +1,9 @@
 import utils
-from summarization_models import api_models
+from summarization_models import api_models, developped_models
 
 def main():
     test_data = utils.load_data()
-    api_models.meaning_cloud(test_data)
+    developped_models.pegasus(test_data)
 
 
 if __name__ == '__main__':
