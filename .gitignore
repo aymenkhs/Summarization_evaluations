@@ -11,3 +11,6 @@ data/*
 ! data/.gitkeep
 result_data/*
 ! result_data/.gitkeep
+
+# env file
+*.env
