@@ -6,11 +6,13 @@ venv/
 __pycache__/
 */__pycache__/
 
-# data
+# data and models
 data/*
-! data/.gitkeep
+!data/.gitkeep
 result_data/*
-! result_data/.gitkeep
+!result_data/.gitkeep
+models/*
+!models/.gitkeep
 
 # env file
 *.env
