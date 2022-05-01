@@ -1,7 +1,7 @@
 import utils
 
 def main():
-    pass
+    test_data = utils.load_data()
 
 if __name__ == '__main__':
     main()
