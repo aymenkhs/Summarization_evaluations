@@ -1,3 +1,5 @@
+import time
+
 import torch
 from transformers import PegasusTokenizer, PegasusForConditionalGeneration
 from transformers import BartTokenizer, BartForConditionalGeneration
@@ -10,16 +12,17 @@ def pegasus(data, model_path='models/pegasus_75000_steps', model_name='google/pe
     model = PegasusForConditionalGeneration.from_pretrained(model_path)
 
     results = []
+    times = []
     for instance in data.index:
         source = data.loc[instance]['dialogue']
-        tokens = tokenizer(source, truncation=True, padding="longest", return_tensors="pt").to(device)
-        summary = model.generate(**tokens)
+        summary, execution_time = predict(model, tokenizer, source)
         summary = tokenizer.batch_decode(summary, skip_special_tokens=True)
         results += summary
+        times.append(execution_time)
         print(summary)
-        import pdb; pdb.set_trace()
 
     data['result_summary'] = results
+    data['execution_time'] = times
     return data
 
 def distilled_pegasus(data, model_path='models/distill_pegasus_30_epochs', model_name='sshleifer/distill-pegasus-xsum-16-4'):
@@ -28,16 +31,17 @@ def distilled_pegasus(data, model_path='models/distill_pegasus_30_epochs', model
     model = PegasusForConditionalGeneration.from_pretrained(model_path)
 
     results = []
+    times = []
     for instance in data.index:
         source = data.loc[instance]['dialogue']
-        tokens = tokenizer(source, truncation=True, padding="longest", return_tensors="pt").to(device)
-        summary = model.generate(**tokens)
+        summary, execution_time = predict(model, tokenizer, source)
         summary = tokenizer.batch_decode(summary, skip_special_tokens=True)
         results += summary
+        times.append(execution_time)
         print(summary)
-        import pdb; pdb.set_trace()
 
     data['result_summary'] = results
+    data['execution_time'] = times
     return data
 
 def distilled_bart(data, model_path='models/distill_bart_1_1', model_name='sshleifer/distilbart-xsum-1-1'):
@@ -46,17 +50,33 @@ def distilled_bart(data, model_path='models/distill_bart_1_1', model_name='sshle
     model = BartForConditionalGeneration.from_pretrained(model_path)
 
     results = []
+    times = []
     for instance in data.index:
         source = data.loc[instance]['dialogue']
-        tokens = tokenizer(source, truncation=True, padding="longest", return_tensors="pt").to(device)
-        summary = model.generate(**tokens)
+        summary, execution_time = predict(model, tokenizer, source)
         summary = tokenizer.batch_decode(summary, skip_special_tokens=True)
         results += summary
+        times.append(execution_time)
         print(summary)
-        import pdb; pdb.set_trace()
 
     data['result_summary'] = results
+    data['execution_time'] = times
     return data
 
 def transformers(data, model_path):
     pass
+
+def time_it(method):
+    def timed(*args, **kw):
+        ts = time.time()
+        result = method(*args, **kw)
+        te = time.time()
+        execution_time = te - ts
+        return result, execution_time
+    return timed
+
+@time_it
+def predict(model, tokenizer, source):
+    tokens = tokenizer(source, truncation=True, padding="longest", return_tensors="pt").to(device)
+    summary = model.generate(**tokens)
+    return summary
