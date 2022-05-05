@@ -25,7 +25,6 @@ def execute_and_evaluate_models(data, models):
 
         if '{}.csv'.format(model) in os.listdir('result_data'):
             result_data = pd.read_csv(os.path.join('result_data', '{}.csv'.format(model)))
-            result_data.columns = ['id', 'referance', 'dialogue', 'prediction', 'execution_time']
         else:
             if model == 'pegasus':
                 result_data = developped_models.pegasus(pd.DataFrame(data),
