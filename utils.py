@@ -47,7 +47,7 @@ def execute_and_evaluate_models(data, models):
             result_data.to_csv(os.path.join('result_data', '{}.csv'.format(model)), index=False)
 
         result_data = evaluations.compute_metrics(result_data, metrics='all')
-        result_data.to_csv(os.path.join('result_data', '{}.csv'.format(model)))
+        result_data.to_csv(os.path.join('result_data', '{}.csv'.format(model)), index=False)
 
         results[model] = result_data
 
