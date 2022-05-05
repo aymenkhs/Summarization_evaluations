@@ -21,24 +21,30 @@ def execute_and_evaluate_models(data, models):
     results = {}
     for model in models:
 
-        if model == 'pegasus':
-            result_data = developped_models.pegasus(pd.DataFrame(data,
-                model_path='models/pegasus_75000_steps',
-                model_name='google/pegasus-large'))
-        elif metric == 'distill_pegasus':
-            result_data = developped_models.distilled_pegasus(pd.DataFrame(data,
-                model_path='models/distill_pegasus_30_epochs',
-                model_name='sshleifer/distill-pegasus-xsum-16-4'))
-        elif metric == 'distill_bart_1_1':
-            result_data = developped_models.distilled_bart(pd.DataFrame(data,
-                model_path='models/distill_bart_1_1',
-                model_name='sshleifer/distilbart-xsum-1-1'))
-        elif metric == 'distill_bart_6_6':
-            result_data = developped_models.distilled_bart(pd.DataFrame(data,
-                model_path='models/distill_bart_6_6',
-                model_name='sshleifer/distilbart-xsum-6-6'))
+        print(model)
 
-        result_data.to_csv(os.path.join('result_data', '{}.csv'.format(model)))
+        if '{}.csv'.format(model) in os.listdir('result_data'):
+            result_data = pd.read_csv(os.path.join('result_data', '{}.csv'.format(model)))
+            result_data.columns = ['id', 'referance', 'dialogue', 'prediction', 'execution_time']
+        else:
+            if model == 'pegasus':
+                result_data = developped_models.pegasus(pd.DataFrame(data),
+                    model_path='models/pegasus_75000_steps',
+                    model_name='google/pegasus-large')
+            elif model == 'distill_pegasus':
+                result_data = developped_models.distilled_pegasus(pd.DataFrame(data),
+                    model_path='models/distill_pegasus_30_epochs',
+                    model_name='sshleifer/distill-pegasus-xsum-16-4')
+            elif model == 'distill_bart_1_1':
+                result_data = developped_models.distilled_bart(pd.DataFrame(data),
+                    model_path='models/distill_bart_1_1',
+                    model_name='sshleifer/distilbart-xsum-1-1')
+            elif model == 'distill_bart_6_6':
+                result_data = developped_models.distilled_bart(pd.DataFrame(data),
+                    model_path='models/distill_bart_6_6',
+                    model_name='sshleifer/distilbart-xsum-6-6')
+            result_data.columns = ['id', 'referance', 'dialogue', 'prediction', 'execution_time']
+            result_data.to_csv(os.path.join('result_data', '{}.csv'.format(model)), index=False)
 
         result_data = evaluations.compute_metrics(result_data, metrics='all')
         result_data.to_csv(os.path.join('result_data', '{}.csv'.format(model)))
