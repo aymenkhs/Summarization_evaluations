@@ -13,8 +13,8 @@ def load_data(path='data/test.json'):
 
 def execute_and_evaluate_models(data, models):
 
-    if models.lower() == 'all':
-        models = AVAILABLE_METRICS
+    if type(models) is str and models.lower() == 'all':
+        models = AVAILABLE_MODELS
     else:
         models = [model.lower() for model in models if model.lower() in AVAILABLE_MODELS]
 
