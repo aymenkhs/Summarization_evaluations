@@ -5,7 +5,7 @@ import pandas as pd
 from summarization_models import api_models, developped_models
 from summarization_metrics import evaluations
 
-AVAILABLE_MODELS = ['pegasus', 'distill_pegasus', 'distill_bart_1_1', 'distill_bart_6_6']
+AVAILABLE_MODELS = ['pegasus', 'distill_pegasus', 'distill_bart_1_1', 'distill_bart_6_6', 'distill_bart_6_6_checkpoint-6000']
 
 def load_data(path='data/test.json'):
     test_data = pd.read_json(path)
@@ -43,6 +43,11 @@ def execute_and_evaluate_models(data, models):
                 result_data = developped_models.distilled_bart(pd.DataFrame(data),
                     model_path='models/distill_bart_6_6',
                     model_name='sshleifer/distilbart-xsum-6-6')
+            elif model == 'distill_bart_6_6_checkpoint-6000':
+                result_data = developped_models.distilled_bart(pd.DataFrame(data),
+                    model_path='models/distill_bart_6_6_checkpoint-6000',
+                    model_name='sshleifer/distilbart-xsum-6-6')
+
             result_data.columns = ['id', 'referance', 'dialogue', 'prediction', 'execution_time']
             result_data.to_csv(os.path.join('result_data', '{}.csv'.format(model)), index=False)
 
