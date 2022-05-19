@@ -11,8 +11,7 @@ data/*
 !data/.gitkeep
 result_data/*
 !result_data/.gitkeep
-models/*
-!models/.gitkeep
+models/
 
 # env file
 *.env
