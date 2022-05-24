@@ -15,3 +15,4 @@ models/
 
 # env file
 *.env
+/openai_results

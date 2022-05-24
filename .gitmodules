@@ -1,3 +1,3 @@
 [submodule "summarization_metrics"]
 	path = summarization_metrics
-	url = git@github.com:aymenkhs/summarization_metrics.git
+	url = https://github.com/aymenkhs/summarization_metrics.git

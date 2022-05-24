@@ -1,6 +1,7 @@
 import os
 
 import requests
+import openai
 import nlpcloud
 
 from dotenv import load_dotenv
@@ -9,15 +10,20 @@ load_dotenv()
 NLPCLOUD_API_KEY = os.getenv("NLPCLOUD_API_KEY")
 MEANING_CLOUD_API_KEY = os.getenv("MEANING_CLOUD_API_KEY")
 
-def nlpcloud_bart(data):
+OPENAI_ORGANIZATION = os.getenv("OPENAI_ORGANIZATION")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-    client = nlpcloud.Client("bart-large-cnn", NLPCLOUD_API_KEY, False)
+def openAI(data):
+
+    openai.organization = OPENAI_ORGANIZATION
+    openai.api_key = OPENAI_API_KEY
 
     results = []
     for instance in data.index:
-        import pdb; pdb.set_trace()
-        response = client.summarization(data.loc[instance]['dialogue'])
-        summary = response['summary_text']
+        response = openai.Completion.create(engine="text-davinci-002", prompt=data.loc[instance]['dialogue'] + "\n\nTl;dr", temperature=0.7, max_tokens=60, top_p=1.0, frequency_penalty=0.0, presence_penalty=0.0)
+        summary = response["choices"][0]["text"]
+        print(summary)
+
         results.append(summary)
 
     data['result_summary'] = results
